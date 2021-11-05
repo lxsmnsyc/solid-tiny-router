@@ -45,12 +45,12 @@ const routes = createRouterTree([
   },
   // Parametized route
   {
-    path: '/[id]',
+    path: '/parameter/[id]',
     component: lazy(() => import('./pages/[id]')),
   },
   // Wildcard Route
   {
-    path: '/[...list]',
+    path: '/wildcard/[...list]',
     component: lazy(() => import('./pages/[...list]')),
   },
 ]);
