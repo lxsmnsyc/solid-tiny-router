@@ -110,13 +110,17 @@ Navigation component. Must be used within pages and components controlled by `<R
 
 - `pathname` is a reactive property for tracking the `window.location.pathname`.
 - `search` is a reactive property for tracking the `window.location.search`.
-- `push` pushes a new URL and navigates to the given URL.
-- `replace` replaces the current history and navigates to the given URL.
-- `prefetch` prefetches the given URL.
-- `back` is used to navigate back in history.
-- `forward` is used to navigate forward in history.
-- `reload` performs page reload.
+- `push(url)` pushes a new URL and navigates to the given URL.
+- `replace(url)` replaces the current history and navigates to the given URL.
+- `prefetch(url, isPriority)` prefetches the given URL.
+- `back()` is used to navigate back in history.
+- `forward()` is used to navigate forward in history.
+- `reload()` performs page reload.
 - `params` provides the object based on the parsed URL (if the path of the page is either a wildcard route, a parametized route or a combination of both).
+
+For `push`, `replace`, `back`, and `forward`, you can pass another parameter `opts`:
+
+- `scroll` scrolls the window to the top of the page after navigation. (Possible values is `"auto"`, `"smooth"` or just `undefined`, defaults to `"auto"`.)
 
 ### `createRouterTree`
 
