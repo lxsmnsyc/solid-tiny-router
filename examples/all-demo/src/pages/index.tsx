@@ -12,6 +12,9 @@ export default function Index(): JSX.Element {
       <div class="flex flex-col space-y-1">
         <Link href="/a" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page A</Link>
         <Link href="/b" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page B</Link>
+        <Link href="/parameter/c" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page C</Link>
+        <Link href="/parameter/d" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page D</Link>
+        <Link href="/wildcard/e/f/g/h" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to page E, F, G, H</Link>
       </div>
     </div>
   );

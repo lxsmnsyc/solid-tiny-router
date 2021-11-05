@@ -15,11 +15,11 @@ const routes: Route[] = [
     component: lazy(() => import('./pages/b')),
   },
   {
-    path: '/[id]',
+    path: '/parameter/[id]',
     component: lazy(() => import('./pages/[id]')),
   },
   {
-    path: '/[...list]',
+    path: '/wildcard/[...list]',
     component: lazy(() => import('./pages/[...list]')),
   },
 ];
