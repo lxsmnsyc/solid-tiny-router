@@ -89,7 +89,7 @@ export default function Link(
     // TODO intersection observer
     const anchorHref = props.href;
     const isVisible = visible();
-    const shouldPrefetch = props.prefetch && isVisible && isLocalURL(anchorHref);
+    const shouldPrefetch = (props.prefetch ?? true) && isVisible && isLocalURL(anchorHref);
     if (shouldPrefetch) {
       router.prefetch(anchorHref).catch((err) => {
         setError(err);
@@ -100,7 +100,7 @@ export default function Link(
   // Priotized prefetching on mouse enter
   createEffect(() => {
     const anchorHref = props.href;
-    const shouldPrefetch = props.prefetch && isLocalURL(anchorHref);
+    const shouldPrefetch = (props.prefetch ?? true) && isLocalURL(anchorHref);
     const onMouseEnter = () => {
       if (shouldPrefetch) {
         router.prefetch(anchorHref, true).catch((err) => {
