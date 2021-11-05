@@ -53,7 +53,7 @@ export default function Router(
 export function useRouter<P extends RouterParams>(): RouterInstance<P> {
   const location = useContext(LocationContext);
   const params = useContext(ParamsContext);
-  if (location && params) {
+  if (location) {
     return mergeProps(location, {
       params: params as P,
     });
