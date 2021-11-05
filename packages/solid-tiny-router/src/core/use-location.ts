@@ -1,5 +1,8 @@
 import { createSignal, createEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
+import { isLocalURL, normalizeURL } from '../utils/routing';
+import { RouterTree } from './create-router-tree';
+import { matchRoute } from './router';
 
 // https://github.com/GoogleChromeLabs/quicklink/blob/master/src/prefetch.mjs
 function hasPrefetch(): boolean {
@@ -89,6 +92,7 @@ function noop() {
 }
 
 export default function useLocation(
+  routes: () => RouterTree,
   options?: Partial<UseLocationOptions>,
 ): UseLocation {
   if (isServer) {
@@ -163,7 +167,13 @@ export default function useLocation(
     },
     push,
     replace,
-    prefetch,
+    async prefetch(url, isPriority) {
+      if (isLocalURL(url)) {
+        const matchedNode = matchRoute(routes(), normalizeURL(url));
+        await matchedNode?.value?.preload?.();
+      }
+      return prefetch(url, isPriority);
+    },
     back,
     forward,
     reload,

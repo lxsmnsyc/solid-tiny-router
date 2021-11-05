@@ -1,7 +1,7 @@
 import { JSX, lazy } from 'solid-js';
-import { Route, Router } from 'solid-tiny-router';
+import { createRouterTree, Router } from 'solid-tiny-router';
 
-const routes: Route[] = [
+const routes = createRouterTree([
   {
     path: '/',
     component: lazy(() => import('./pages')),
@@ -22,7 +22,7 @@ const routes: Route[] = [
     path: '/wildcard/[...list]',
     component: lazy(() => import('./pages/[...list]')),
   },
-];
+]);
 
 const NotFound = lazy(() => import('./pages/404'));
 

@@ -6,9 +6,8 @@ import {
   Show,
   mergeProps,
 } from 'solid-js';
+import { RouterTree } from '../core/create-router-tree';
 import {
-  addRoute,
-  createRouterNode,
   matchRoute,
   RouterParams,
 } from '../core/router';
@@ -21,13 +20,8 @@ export interface RouterInstance<P extends RouterParams = RouterParams> extends U
 const LocationContext = createContext<UseLocation>();
 const ParamsContext = createContext<RouterParams>();
 
-export interface Route {
-  path: string;
-  component: () => JSX.Element;
-}
-
 export interface RouterProps {
-  routes: Route[];
+  routes: RouterTree;
   fallback?: JSX.Element;
   location?: UseLocationOptions;
 }
@@ -35,21 +29,11 @@ export interface RouterProps {
 export default function Router(
   props: RouterProps,
 ): JSX.Element {
-  const location = useLocation(props.location);
+  const location = useLocation(() => props.routes, props.location);
 
-  const routerNode = createMemo(() => {
-    const root = createRouterNode<Route['component']>('');
-    const routesProp = props.routes;
-
-    for (let i = 0, len = routesProp.length; i < len; i += 1) {
-      const route = routesProp[i];
-      addRoute(root, route.path.split('/'), route.component);
-    }
-
-    return root;
-  });
-
-  const matchedRoute = createMemo(() => matchRoute(routerNode(), location.pathname.split('/')));
+  const matchedRoute = createMemo(() => (
+    matchRoute(props.routes, location.pathname)
+  ));
 
   return (
     <LocationContext.Provider value={location}>

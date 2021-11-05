@@ -2,7 +2,6 @@ export {
   default as Router,
   useRouter,
   RouterProps,
-  Route,
   RouterInstance,
 } from './components/Router';
 export {
@@ -10,5 +9,10 @@ export {
   LinkProps,
 } from './components/Link';
 export {
-  RouterParams
+  default as createRouterTree,
+  RouterTree,
+  Route,
+} from './core/create-router-tree';
+export {
+  RouterParams,
 } from './core/router';

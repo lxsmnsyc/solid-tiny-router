@@ -6,38 +6,8 @@ import {
   Show,
 } from 'solid-js';
 import { excludeProps } from '../utils/exclude-props';
+import { isModifiedEvent, isLocalURL } from '../utils/routing';
 import { useRouter } from './Router';
-
-function getLocationOrigin() {
-  const { protocol, hostname, port } = window.location;
-  return `${protocol}//${hostname}${port ? `:${port}` : ''}`;
-}
-
-function isLocalURL(url: string): boolean {
-  // prevent a hydration mismatch on href for url with anchor refs
-  if (url.startsWith('/') || url.startsWith('#') || url.startsWith('?')) {
-    return true;
-  }
-  try {
-    // absolute urls can be local if they are on the same origin
-    const locationOrigin = getLocationOrigin();
-    const resolved = new URL(url, locationOrigin);
-    return resolved.origin === locationOrigin;
-  } catch (_) {
-    return false;
-  }
-}
-
-function isModifiedEvent(event: MouseEvent): boolean {
-  const { target } = event.currentTarget as HTMLAnchorElement;
-  return (
-    (target && target !== '_self')
-    || event.metaKey
-    || event.ctrlKey
-    || event.shiftKey
-    || event.altKey // triggers resource download
-  );
-}
 
 function Throwable(props: { error: Error }): JSX.Element {
   throw props.error;
@@ -91,11 +61,35 @@ export default function Link(
 
   const [error, setError] = createSignal<Error>();
 
+  const [visible, setVisible] = createSignal(false);
+
+  createEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target === anchorRef && entry.isIntersecting) {
+          // Host intersected, set visibility to true
+          setVisible(true);
+
+          // Stop observing
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(anchorRef);
+
+    onCleanup(() => {
+      observer.unobserve(anchorRef);
+      observer.disconnect();
+    });
+  });
+
   // Lazy prefetching
   createEffect(() => {
     // TODO intersection observer
     const anchorHref = props.href;
-    const shouldPrefetch = isLocalURL(anchorHref);
+    const isVisible = visible();
+    const shouldPrefetch = (props.prefetch ?? true) && isVisible && isLocalURL(anchorHref);
     if (shouldPrefetch) {
       router.prefetch(anchorHref).catch((err) => {
         setError(err);
@@ -106,7 +100,7 @@ export default function Link(
   // Priotized prefetching on mouse enter
   createEffect(() => {
     const anchorHref = props.href;
-    const shouldPrefetch = isLocalURL(anchorHref);
+    const shouldPrefetch = (props.prefetch ?? true) && isLocalURL(anchorHref);
     const onMouseEnter = () => {
       if (shouldPrefetch) {
         router.prefetch(anchorHref, true).catch((err) => {

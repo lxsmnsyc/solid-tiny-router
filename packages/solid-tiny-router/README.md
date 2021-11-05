@@ -20,17 +20,17 @@ pnpm add solid-tiny-router
 
 ## Features
 
-- Easy to use: Only 2 components and a single utility: `<Router>`, `<Link>` and `useRouter`!
+- Easy to use: Only 2 components and a 2 utility: `<Router>`, `<Link>`, `useRouter` and `createRouterTree`!
 - Link prefetching: load pages ahead of time with `router.prefetch` and `<Link prefetch>`.
 
 ## Usage
 
 ```js
-import { JSX, lazy } from 'solid-js';
-import { Route, Router } from 'solid-tiny-router';
+import { lazy } from 'solid-js';
+import { createRouterTree, Router } from 'solid-tiny-router';
 
 // Declare routes
-const routes = [
+const routes = createRouterTree([
   {
     path: '/',
     component: lazy(() => import('./pages')),
@@ -53,7 +53,7 @@ const routes = [
     path: '/[...list]',
     component: lazy(() => import('./pages/[...list]')),
   },
-];
+]);
 
 const NotFound = lazy(() => import('./pages/404'));
 
@@ -100,7 +100,7 @@ The main routing component. `<Router>` builds a routing switch from `routes` and
 
 Navigation component. Must be used within pages and components controlled by `<Router`>. `<Link>` controls the page history and prevents page reload when navigating between local pages.
 
-- `prefetch` allows the given page to be prefetched.
+- `prefetch` allows the given page to be prefetched. Defaults to `true`.
 - `replace` replaces the current history instead of pushing a new history.
 - `scroll` scrolls the window to the top of the page after navigation. (Possible values is `"auto"`, `"smooth"` or just `undefined`, defaults to `"auto"`.)
 
@@ -117,6 +117,10 @@ Navigation component. Must be used within pages and components controlled by `<R
 - `forward` is used to navigate forward in history.
 - `reload` performs page reload.
 - `params` provides the object based on the parsed URL (if the path of the page is either a wildcard route, a parametized route or a combination of both).
+
+### `createRouterTree`
+
+Builds the router tree from an array of `Route`s. This is used by `<Router>` to match pages and also to preload component chunks (if `lazy` was used). Must be called outside of the component and is recommended to be called only once.
 
 ### SSR
 
