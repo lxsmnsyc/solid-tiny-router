@@ -84,7 +84,7 @@ export default function ParametizedRoute() {
         <span>{`Page ${id()}`}</span>
         !
       </span>
-      <div class="flex flex-col space-y-1">
+      <div>
         <Link href="/">Go to home</Link>
       </div>
     </div>
