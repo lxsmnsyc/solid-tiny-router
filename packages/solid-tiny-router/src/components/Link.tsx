@@ -61,11 +61,35 @@ export default function Link(
 
   const [error, setError] = createSignal<Error>();
 
+  const [visible, setVisible] = createSignal(false);
+
+  createEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target === anchorRef && entry.isIntersecting) {
+          // Host intersected, set visibility to true
+          setVisible(true);
+
+          // Stop observing
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(anchorRef);
+
+    onCleanup(() => {
+      observer.unobserve(anchorRef);
+      observer.disconnect();
+    });
+  });
+
   // Lazy prefetching
   createEffect(() => {
     // TODO intersection observer
     const anchorHref = props.href;
-    const shouldPrefetch = isLocalURL(anchorHref);
+    const isVisible = visible();
+    const shouldPrefetch = props.prefetch && isVisible && isLocalURL(anchorHref);
     if (shouldPrefetch) {
       router.prefetch(anchorHref).catch((err) => {
         setError(err);
@@ -76,7 +100,7 @@ export default function Link(
   // Priotized prefetching on mouse enter
   createEffect(() => {
     const anchorHref = props.href;
-    const shouldPrefetch = isLocalURL(anchorHref);
+    const shouldPrefetch = props.prefetch && isLocalURL(anchorHref);
     const onMouseEnter = () => {
       if (shouldPrefetch) {
         router.prefetch(anchorHref, true).catch((err) => {

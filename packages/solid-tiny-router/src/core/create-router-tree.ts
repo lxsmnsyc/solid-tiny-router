@@ -5,7 +5,7 @@ import { addRoute, createRouterNode, RouterNode } from './router';
 
 export interface Page {
   (): JSX.Element;
-  preload?: () => Promise<Page>;
+  preload?: () => (void | Promise<Page>);
 }
 
 export interface Route {
