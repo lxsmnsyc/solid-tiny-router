@@ -26,11 +26,11 @@ pnpm add solid-tiny-router
 ## Usage
 
 ```js
-import { JSX, lazy } from 'solid-js';
-import { Route, Router } from 'solid-tiny-router';
+import { lazy } from 'solid-js';
+import { createRouterTree, Router } from 'solid-tiny-router';
 
 // Declare routes
-const routes = [
+const routes = createRouterTree([
   {
     path: '/',
     component: lazy(() => import('./pages')),
@@ -53,7 +53,7 @@ const routes = [
     path: '/[...list]',
     component: lazy(() => import('./pages/[...list]')),
   },
-];
+]);
 
 const NotFound = lazy(() => import('./pages/404'));
 
@@ -100,7 +100,7 @@ The main routing component. `<Router>` builds a routing switch from `routes` and
 
 Navigation component. Must be used within pages and components controlled by `<Router`>. `<Link>` controls the page history and prevents page reload when navigating between local pages.
 
-- `prefetch` allows the given page to be prefetched.
+- `prefetch` allows the given page to be prefetched. Defaults to `true`.
 - `replace` replaces the current history instead of pushing a new history.
 - `scroll` scrolls the window to the top of the page after navigation. (Possible values is `"auto"`, `"smooth"` or just `undefined`, defaults to `"auto"`.)
 
