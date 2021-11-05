@@ -1,6 +1,6 @@
 {
   "name": "all-demo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "solid-js": "^1.2.1",
-    "solid-tiny-router": "0.1.0",
+    "solid-tiny-router": "0.1.1",
     "tailwindcss": "^2.2.17"
   },
   "private": true,
