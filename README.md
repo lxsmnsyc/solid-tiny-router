@@ -118,6 +118,19 @@ Navigation component. Must be used within pages and components controlled by `<R
 - `reload` performs page reload.
 - `params` provides the object based on the parsed URL (if the path of the page is either a wildcard route, a parametized route or a combination of both).
 
+### SSR
+
+For SSR, you can simply pass a `pathname` and a `search` strings to a `location` object to `<Router>`
+
+```js
+<Router
+  location={{
+    pathname,
+    search,
+  }}
+/>
+```
+
 ## License
 
 MIT © [lxsmnsyc](https://github.com/lxsmnsyc)
