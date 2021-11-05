@@ -100,7 +100,7 @@ export interface RouterResult<T, P extends RouterParams = RouterParams> {
   params: P;
 }
 
-export function matchRoute<T, P extends RouterParams = RouterParams>(
+function matchRouteInternal<T, P extends RouterParams = RouterParams>(
   parent: RouterNode<T>,
   [lead, ...names]: string[],
   params: P = {} as P,
@@ -111,7 +111,7 @@ export function matchRoute<T, P extends RouterParams = RouterParams>(
 
     if (child.key === lead) {
       if (names.length > 0) {
-        const matched = matchRoute(child, names, {
+        const matched = matchRouteInternal(child, names, {
           ...params,
         });
 
@@ -134,7 +134,7 @@ export function matchRoute<T, P extends RouterParams = RouterParams>(
     if (names.length > 0) {
       const namedKey = parent.named.key;
       const paramKey = namedKey.substring(1, namedKey.length - 1);
-      const matched = matchRoute(parent.named, names, {
+      const matched = matchRouteInternal(parent.named, names, {
         ...params,
         [paramKey]: lead,
       });
@@ -167,4 +167,11 @@ export function matchRoute<T, P extends RouterParams = RouterParams>(
     };
   }
   return undefined;
+}
+
+export function matchRoute<T, P extends RouterParams = RouterParams>(
+  parent: RouterNode<T>,
+  route: string,
+): RouterResult<T, P> | undefined {
+  return matchRouteInternal(parent, route.split('/'));
 }

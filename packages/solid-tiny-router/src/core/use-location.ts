@@ -1,6 +1,6 @@
 import { createSignal, createEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { isLocalURL } from '../utils/routing';
+import { isLocalURL, normalizeURL } from '../utils/routing';
 import { RouterTree } from './create-router-tree';
 import { matchRoute } from './router';
 
@@ -169,8 +169,8 @@ export default function useLocation(
     replace,
     async prefetch(url, isPriority) {
       if (isLocalURL(url)) {
-        const matchedNode = matchRoute(routes(), url.split('/'));
-        matchedNode?.value?.preload?.();
+        const matchedNode = matchRoute(routes(), normalizeURL(url));
+        await matchedNode?.value?.preload?.();
       }
       return prefetch(url, isPriority);
     },

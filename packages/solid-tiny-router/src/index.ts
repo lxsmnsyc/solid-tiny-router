@@ -10,6 +10,8 @@ export {
 } from './components/Link';
 export {
   default as createRouterTree,
+  RouterTree,
+  Route,
 } from './core/create-router-tree';
 export {
   RouterParams,

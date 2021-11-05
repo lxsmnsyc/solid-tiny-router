@@ -28,3 +28,9 @@ export function isModifiedEvent(event: MouseEvent): boolean {
     || event.altKey // triggers resource download
   );
 }
+
+export function normalizeURL(url: string): string {
+  const locationOrigin = getLocationOrigin();
+  const resolved = new URL(url, locationOrigin);
+  return resolved.pathname;
+}

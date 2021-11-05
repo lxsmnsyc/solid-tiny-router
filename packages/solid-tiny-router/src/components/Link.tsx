@@ -6,8 +6,8 @@ import {
   Show,
 } from 'solid-js';
 import { excludeProps } from '../utils/exclude-props';
+import { isModifiedEvent, isLocalURL } from '../utils/routing';
 import { useRouter } from './Router';
-
 
 function Throwable(props: { error: Error }): JSX.Element {
   throw props.error;

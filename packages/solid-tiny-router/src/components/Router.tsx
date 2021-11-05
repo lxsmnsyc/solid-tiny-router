@@ -32,7 +32,7 @@ export default function Router(
   const location = useLocation(() => props.routes, props.location);
 
   const matchedRoute = createMemo(() => (
-    matchRoute(props.routes, location.pathname.split('/'))
+    matchRoute(props.routes, location.pathname)
   ));
 
   return (
