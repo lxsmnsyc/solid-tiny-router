@@ -20,7 +20,7 @@ pnpm add solid-tiny-router
 
 ## Features
 
-- Easy to use: Only 2 components and a single utility: `<Router>`, `<Link>` and `useRouter`!
+- Easy to use: Only 2 components and a 2 utility: `<Router>`, `<Link>`, `useRouter` and `createRouterTree`!
 - Link prefetching: load pages ahead of time with `router.prefetch` and `<Link prefetch>`.
 
 ## Usage
@@ -117,6 +117,10 @@ Navigation component. Must be used within pages and components controlled by `<R
 - `forward` is used to navigate forward in history.
 - `reload` performs page reload.
 - `params` provides the object based on the parsed URL (if the path of the page is either a wildcard route, a parametized route or a combination of both).
+
+### `createRouterTree`
+
+Builds the router tree from an array of `Route`s. This is used by `<Router>` to match pages and also to preload component chunks (if `lazy` was used). Must be called outside of the component and is recommended to be called only once.
 
 ### SSR
 
