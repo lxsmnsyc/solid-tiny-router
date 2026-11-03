@@ -13,13 +13,14 @@ export function isLocalURL(url: string): boolean {
     const locationOrigin = getLocationOrigin();
     const resolved = new URL(url, locationOrigin);
     return resolved.origin === locationOrigin;
-  } catch (_) {
+  } catch {
     return false;
   }
 }
 
 export function isModifiedEvent(event: MouseEvent): boolean {
-  const { target } = event.currentTarget as HTMLAnchorElement;
+  const anchor = event.currentTarget;
+  const target = anchor instanceof HTMLAnchorElement ? anchor.target : '';
   return (
     (target && target !== '_self') ||
     event.metaKey ||

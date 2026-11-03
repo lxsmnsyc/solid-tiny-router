@@ -28,7 +28,7 @@ export default function Link(props: LinkProps): JSX.Element {
     const anchorHref = props.href;
     const shouldReplace = props.replace;
 
-    const onClick = (ev: MouseEvent) => {
+    const onClick = (ev: MouseEvent): void => {
       if (isModifiedEvent(ev) || !isLocalURL(anchorHref)) {
         return;
       }
@@ -93,7 +93,7 @@ export default function Link(props: LinkProps): JSX.Element {
   createEffect(() => {
     const anchorHref = props.href;
     const shouldPrefetch = (props.prefetch ?? true) && isLocalURL(anchorHref);
-    const onMouseEnter = () => {
+    const onMouseEnter = (): void => {
       if (shouldPrefetch) {
         router.prefetch(anchorHref, true).catch((err) => {
           setError(err);

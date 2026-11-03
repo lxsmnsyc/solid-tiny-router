@@ -30,7 +30,7 @@ function addToChildren<T>(children: RouterNode<T>[], key: string, value?: T): Ro
 }
 
 export function addRoute<T>(parent: RouterNode<T>, [lead, ...names]: string[], value: T): void {
-  function addRouteToChildren(children: RouterNode<T>[]) {
+  function addRouteToChildren(children: RouterNode<T>[]): void {
     for (let i = 0, len = children.length; i < len; i += 1) {
       const child = children[i];
 
@@ -89,6 +89,8 @@ export interface RouterResult<T, P extends RouterParams = RouterParams> {
 function matchRouteInternal<T, P extends RouterParams = RouterParams>(
   parent: RouterNode<T>,
   [lead, ...names]: string[],
+  // The caller picks P, and the matched segments fill it.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   params: P = {} as P,
 ): RouterResult<T, P> | undefined {
   // Find first if the lead exists in the normal children

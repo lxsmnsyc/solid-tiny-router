@@ -41,6 +41,8 @@ export function useRouter<P extends RouterParams>(): RouterInstance<P> {
   const params = useContext(ParamsContext);
   if (location) {
     return mergeProps(location, {
+      // The caller picks P to match its route pattern.
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
       params: params as P,
     });
   }

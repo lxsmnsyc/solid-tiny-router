@@ -1,45 +1,39 @@
-export function excludeProps<T extends Record<string, any>, K extends keyof T>(
-  value: T,
-  keys: K[],
-): Omit<T, K> {
+export function excludeProps<T extends object, K extends keyof T>(value: T, keys: K[]): Omit<T, K> {
+  const omitted: PropertyKey[] = keys;
   const newObject = {};
 
-  const currentKeys = Object.keys(value);
-
-  for (let i = 0, len = currentKeys.length; i < len; i += 1) {
-    const key = currentKeys[i];
-    if (!keys.includes(key as K)) {
+  for (const key of Object.keys(value)) {
+    if (!omitted.includes(key)) {
       Object.defineProperty(newObject, key, {
-        get() {
-          return value[key];
+        get(): unknown {
+          return Reflect.get(value, key);
         },
         enumerable: true,
       });
     }
   }
 
+  // Each key of T other than K got a getter above.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return newObject as Omit<T, K>;
 }
 
-export function pickProps<T extends Record<string, any>, K extends keyof T>(
-  value: T,
-  keys: K[],
-): Pick<T, K> {
+export function pickProps<T extends object, K extends keyof T>(value: T, keys: K[]): Pick<T, K> {
+  const picked: PropertyKey[] = keys;
   const newObject = {};
 
-  const currentKeys = Object.keys(value);
-
-  for (let i = 0, len = currentKeys.length; i < len; i += 1) {
-    const key = currentKeys[i];
-    if (keys.includes(key as K)) {
+  for (const key of Object.keys(value)) {
+    if (picked.includes(key)) {
       Object.defineProperty(newObject, key, {
-        get() {
-          return value[key];
+        get(): unknown {
+          return Reflect.get(value, key);
         },
         enumerable: true,
       });
     }
   }
 
+  // Each key in K got a getter above.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return newObject as Pick<T, K>;
 }
