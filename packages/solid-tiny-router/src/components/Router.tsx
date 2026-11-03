@@ -37,10 +37,10 @@ export default function Router(
 
   return (
     <LocationContext.Provider value={location}>
-      <Show when={matchedRoute()} fallback={props.fallback}>
+      <Show keyed when={matchedRoute()} fallback={props.fallback}>
         {(result) => (
           <ParamsContext.Provider value={result.params}>
-            <Show when={result.value}>
+            <Show keyed when={result.value}>
               {(Comp) => <Comp />}
             </Show>
           </ParamsContext.Provider>

@@ -117,7 +117,7 @@ export default function Link(
 
   return (
     <>
-      <Show when={error()}>
+      <Show keyed when={error()}>
         {(err) => <Throwable error={err} />}
       </Show>
       <a
