@@ -1,17 +1,7 @@
-import {
-  JSX,
-  createContext,
-  useContext,
-  createMemo,
-  Show,
-  mergeProps,
-} from 'solid-js';
-import { RouterTree } from '../core/create-router-tree';
-import {
-  matchRoute,
-  RouterParams,
-} from '../core/router';
-import useLocation, { UseLocation, UseLocationOptions } from '../core/use-location';
+import { type JSX, Show, createContext, createMemo, mergeProps, useContext } from 'solid-js';
+import type { RouterTree } from '../core/create-router-tree';
+import { type RouterParams, matchRoute } from '../core/router';
+import useLocation, { type UseLocation, type UseLocationOptions } from '../core/use-location';
 
 export interface RouterInstance<P extends RouterParams = RouterParams> extends UseLocation {
   params: P;
@@ -26,21 +16,17 @@ export interface RouterProps {
   location?: UseLocationOptions;
 }
 
-export default function Router(
-  props: RouterProps,
-): JSX.Element {
+export default function Router(props: RouterProps): JSX.Element {
   const location = useLocation(() => props.routes, props.location);
 
-  const matchedRoute = createMemo(() => (
-    matchRoute(props.routes, location.pathname)
-  ));
+  const matchedRoute = createMemo(() => matchRoute(props.routes, location.pathname));
 
   return (
     <LocationContext.Provider value={location}>
-      <Show when={matchedRoute()} fallback={props.fallback}>
+      <Show keyed when={matchedRoute()} fallback={props.fallback}>
         {(result) => (
           <ParamsContext.Provider value={result.params}>
-            <Show when={result.value}>
+            <Show keyed when={result.value}>
               {(Comp) => <Comp />}
             </Show>
           </ParamsContext.Provider>
@@ -55,6 +41,8 @@ export function useRouter<P extends RouterParams>(): RouterInstance<P> {
   const params = useContext(ParamsContext);
   if (location) {
     return mergeProps(location, {
+      // The caller picks P to match its route pattern.
+      // oxlint-disable-next-line typescript/no-unsafe-type-assertion
       params: params as P,
     });
   }

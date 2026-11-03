@@ -1,12 +1,6 @@
-import {
-  createEffect,
-  createSignal,
-  JSX,
-  onCleanup,
-  Show,
-} from 'solid-js';
+import { type JSX, Show, createEffect, createSignal, onCleanup } from 'solid-js';
 import { excludeProps } from '../utils/exclude-props';
-import { isModifiedEvent, isLocalURL } from '../utils/routing';
+import { isLocalURL, isModifiedEvent } from '../utils/routing';
 import { useRouter } from './Router';
 
 function Throwable(props: { error: Error }): JSX.Element {
@@ -23,9 +17,7 @@ export interface LinkProps extends BaseAnchorAttributes {
   children?: JSX.Element;
 }
 
-export default function Link(
-  props: LinkProps,
-): JSX.Element {
+export default function Link(props: LinkProps): JSX.Element {
   const router = useRouter();
 
   let anchorRef!: HTMLAnchorElement;
@@ -36,7 +28,7 @@ export default function Link(
     const anchorHref = props.href;
     const shouldReplace = props.replace;
 
-    const onClick = (ev: MouseEvent) => {
+    const onClick = (ev: MouseEvent): void => {
       if (isModifiedEvent(ev) || !isLocalURL(anchorHref)) {
         return;
       }
@@ -44,7 +36,7 @@ export default function Link(
 
       // avoid scroll for urls with anchor refs
       let scroll = shouldScroll;
-      if (scroll == null && anchorHref.indexOf('#') >= 0) {
+      if (scroll == null && anchorHref.includes('#')) {
         scroll = undefined;
       }
 
@@ -101,7 +93,7 @@ export default function Link(
   createEffect(() => {
     const anchorHref = props.href;
     const shouldPrefetch = (props.prefetch ?? true) && isLocalURL(anchorHref);
-    const onMouseEnter = () => {
+    const onMouseEnter = (): void => {
       if (shouldPrefetch) {
         router.prefetch(anchorHref, true).catch((err) => {
           setError(err);
@@ -117,7 +109,7 @@ export default function Link(
 
   return (
     <>
-      <Show when={error()}>
+      <Show keyed when={error()}>
         {(err) => <Throwable error={err} />}
       </Show>
       <a
@@ -127,12 +119,7 @@ export default function Link(
           }
           anchorRef = e;
         }}
-        {...excludeProps(props, [
-          'prefetch',
-          'scroll',
-          'ref',
-          'replace',
-        ])}
+        {...excludeProps(props, ['prefetch', 'scroll', 'ref', 'replace'])}
       >
         {props.children}
       </a>

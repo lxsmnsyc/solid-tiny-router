@@ -23,22 +23,14 @@ export function createRouterNode<T>(key: string, value?: T): RouterNode<T> {
   };
 }
 
-function addToChildren<T>(
-  children: RouterNode<T>[],
-  key: string,
-  value?: T,
-): RouterNode<T> {
+function addToChildren<T>(children: RouterNode<T>[], key: string, value?: T): RouterNode<T> {
   const node = createRouterNode(key, value);
   children.push(node);
   return node;
 }
 
-export function addRoute<T>(
-  parent: RouterNode<T>,
-  [lead, ...names]: string[],
-  value: T,
-): void {
-  function addRouteToChildren(children: RouterNode<T>[]) {
+export function addRoute<T>(parent: RouterNode<T>, [lead, ...names]: string[], value: T): void {
+  function addRouteToChildren(children: RouterNode<T>[]): void {
     for (let i = 0, len = children.length; i < len; i += 1) {
       const child = children[i];
 
@@ -65,20 +57,14 @@ export function addRoute<T>(
     if (lead.endsWith(']')) {
       if (lead.startsWith('[...')) {
         if (parent.glob) {
-          throw new SharedRouterPathError(
-            lead,
-            parent.glob.key,
-          );
+          throw new SharedRouterPathError(lead, parent.glob.key);
         }
         parent.glob = createRouterNode(lead, value);
         return;
       }
       if (parent.named) {
         if (lead !== parent.named.key) {
-          throw new SharedRouterPathError(
-            lead,
-            parent.named.key,
-          );
+          throw new SharedRouterPathError(lead, parent.named.key);
         }
       } else {
         parent.named = createRouterNode(lead);
@@ -103,6 +89,8 @@ export interface RouterResult<T, P extends RouterParams = RouterParams> {
 function matchRouteInternal<T, P extends RouterParams = RouterParams>(
   parent: RouterNode<T>,
   [lead, ...names]: string[],
+  // The caller picks P, and the matched segments fill it.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   params: P = {} as P,
 ): RouterResult<T, P> | undefined {
   // Find first if the lead exists in the normal children

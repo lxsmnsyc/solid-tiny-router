@@ -1,29 +1,31 @@
-import { createSignal, createEffect, onCleanup } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { isLocalURL, normalizeURL } from '../utils/routing';
-import { RouterTree } from './create-router-tree';
+import type { RouterTree } from './create-router-tree';
 import { matchRoute } from './router';
 
 // https://github.com/GoogleChromeLabs/quicklink/blob/master/src/prefetch.mjs
 function hasPrefetch(): boolean {
   const link = document.createElement('link');
-  return link.relList && link.relList.supports && link.relList.supports('prefetch');
+  return link.relList.supports('prefetch');
 }
 
-function viaDOM(url: string): Promise<void> {
+async function viaDOM(url: string): Promise<void> {
   return new Promise<void>((res, rej) => {
     const link = document.createElement('link');
     link.rel = 'prefetch';
     link.href = url;
 
-    link.onload = () => res();
+    link.onload = () => {
+      res();
+    };
     link.onerror = rej;
 
     document.head.appendChild(link);
   });
 }
 
-function viaXHR(url: string): Promise<void> {
+async function viaXHR(url: string): Promise<void> {
   return new Promise((res, rej) => {
     const req = new XMLHttpRequest();
 
@@ -34,7 +36,7 @@ function viaXHR(url: string): Promise<void> {
       if (req.status === 200) {
         res();
       } else {
-        rej();
+        rej(new Error(`Failed to prefetch ${url}`));
       }
     };
 
@@ -63,7 +65,7 @@ async function prefetch(url: string, isPriority = false): Promise<void> {
   } else if (hasPrefetch()) {
     try {
       await viaDOM(url);
-    } catch (error) {
+    } catch {
       await viaXHR(url);
     }
   } else {
@@ -91,7 +93,11 @@ export interface UseLocation {
   reload: () => void;
 }
 
-function noop() {
+function noop(): void {
+  // no-op
+}
+
+async function noopPrefetch(): Promise<void> {
   // no-op
 }
 
@@ -105,7 +111,7 @@ export default function useLocation(
       search: options?.search ?? '',
       push: noop,
       replace: noop,
-      prefetch: noop as unknown as UseLocation['prefetch'],
+      prefetch: noopPrefetch,
       back: noop,
       forward: noop,
       reload: noop,
@@ -114,7 +120,7 @@ export default function useLocation(
   const [pathname, setPathname] = createSignal(window.location.pathname);
   const [search, setSearch] = createSignal(window.location.search);
 
-  function updateLocation() {
+  function updateLocation(): void {
     setPathname(window.location.pathname);
     setSearch(window.location.search);
   }
@@ -126,7 +132,7 @@ export default function useLocation(
     });
   });
 
-  function applyLocationUpdate(opts?: Partial<LocationPushOptions>) {
+  function applyLocationUpdate(opts?: Partial<LocationPushOptions>): void {
     updateLocation();
     const behavior = opts && 'scroll' in opts ? opts.scroll : 'auto';
     if (behavior) {
@@ -138,27 +144,27 @@ export default function useLocation(
     }
   }
 
-  function push(url: string, opts?: Partial<LocationPushOptions>) {
+  function push(url: string, opts?: Partial<LocationPushOptions>): void {
     window.history.pushState(null, '', url);
     applyLocationUpdate(opts);
   }
 
-  function replace(url: string, opts?: Partial<LocationPushOptions>) {
+  function replace(url: string, opts?: Partial<LocationPushOptions>): void {
     window.history.replaceState(null, '', url);
     applyLocationUpdate(opts);
   }
 
-  function back(opts?: Partial<LocationPushOptions>) {
+  function back(opts?: Partial<LocationPushOptions>): void {
     window.history.back();
     applyLocationUpdate(opts);
   }
 
-  function forward(opts?: Partial<LocationPushOptions>) {
+  function forward(opts?: Partial<LocationPushOptions>): void {
     window.history.forward();
     applyLocationUpdate(opts);
   }
 
-  function reload() {
+  function reload(): void {
     window.location.reload();
   }
 

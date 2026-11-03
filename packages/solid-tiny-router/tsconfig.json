@@ -1,22 +1,19 @@
 {
-  "exclude": ["node_modules"],
-  "include": ["src", "types"],
+  "include": ["src", "test"],
   "compilerOptions": {
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "importHelpers": true,
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": "./src",
     "strict": true,
+    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "esModuleInterop": true,
-    "target": "ES2017"
+    "target": "ES2017",
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true
   }
 }

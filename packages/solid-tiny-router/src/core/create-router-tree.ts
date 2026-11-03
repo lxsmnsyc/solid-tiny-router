@@ -1,16 +1,10 @@
-import {
-  JSX,
-} from 'solid-js';
-import {
-  addRoute,
-  createRouterNode,
-  RouterNode,
-} from './router';
+import type { JSX } from 'solid-js';
+import { type RouterNode, addRoute, createRouterNode } from './router';
 
 export interface Page {
   (): JSX.Element;
   preload?: () => Promise<{
-    default: Page,
+    default: Page;
   }>;
 }
 
