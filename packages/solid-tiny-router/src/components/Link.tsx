@@ -1,12 +1,6 @@
-import {
-  createEffect,
-  createSignal,
-  type JSX,
-  onCleanup,
-  Show,
-} from 'solid-js';
+import { type JSX, Show, createEffect, createSignal, onCleanup } from 'solid-js';
 import { excludeProps } from '../utils/exclude-props';
-import { isModifiedEvent, isLocalURL } from '../utils/routing';
+import { isLocalURL, isModifiedEvent } from '../utils/routing';
 import { useRouter } from './Router';
 
 function Throwable(props: { error: Error }): JSX.Element {
@@ -23,9 +17,7 @@ export interface LinkProps extends BaseAnchorAttributes {
   children?: JSX.Element;
 }
 
-export default function Link(
-  props: LinkProps,
-): JSX.Element {
+export default function Link(props: LinkProps): JSX.Element {
   const router = useRouter();
 
   let anchorRef!: HTMLAnchorElement;
@@ -44,7 +36,7 @@ export default function Link(
 
       // avoid scroll for urls with anchor refs
       let scroll = shouldScroll;
-      if (scroll == null && anchorHref.indexOf('#') >= 0) {
+      if (scroll == null && anchorHref.includes('#')) {
         scroll = undefined;
       }
 
@@ -127,12 +119,7 @@ export default function Link(
           }
           anchorRef = e;
         }}
-        {...excludeProps(props, [
-          'prefetch',
-          'scroll',
-          'ref',
-          'replace',
-        ])}
+        {...excludeProps(props, ['prefetch', 'scroll', 'ref', 'replace'])}
       >
         {props.children}
       </a>

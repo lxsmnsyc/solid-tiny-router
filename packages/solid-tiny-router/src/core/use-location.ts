@@ -1,4 +1,4 @@
-import { createSignal, createEffect, onCleanup } from 'solid-js';
+import { createEffect, createSignal, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { isLocalURL, normalizeURL } from '../utils/routing';
 import type { RouterTree } from './create-router-tree';
@@ -10,20 +10,22 @@ function hasPrefetch(): boolean {
   return link.relList && link.relList.supports && link.relList.supports('prefetch');
 }
 
-function viaDOM(url: string): Promise<void> {
+async function viaDOM(url: string): Promise<void> {
   return new Promise<void>((res, rej) => {
     const link = document.createElement('link');
     link.rel = 'prefetch';
     link.href = url;
 
-    link.onload = () => res();
+    link.onload = () => {
+      res();
+    };
     link.onerror = rej;
 
     document.head.appendChild(link);
   });
 }
 
-function viaXHR(url: string): Promise<void> {
+async function viaXHR(url: string): Promise<void> {
   return new Promise((res, rej) => {
     const req = new XMLHttpRequest();
 

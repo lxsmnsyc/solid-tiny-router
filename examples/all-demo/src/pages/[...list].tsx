@@ -1,5 +1,6 @@
-import { JSX } from 'solid-js';
-import { Link, useRouter, RouterParams } from 'solid-tiny-router';
+import type { JSX } from 'solid-js';
+import type { RouterParams } from 'solid-tiny-router';
+import { Link, useRouter } from 'solid-tiny-router';
 
 interface Param extends RouterParams {
   list: string[];
@@ -15,7 +16,9 @@ export default function CaptureAllRoute(): JSX.Element {
         !
       </span>
       <div class="flex flex-col space-y-1">
-        <Link href="/" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">Go to home</Link>
+        <Link href="/" class="text-white underline bg-white bg-opacity-25 rounded px-2 py-1">
+          Go to home
+        </Link>
       </div>
     </div>
   );

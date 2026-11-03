@@ -1,16 +1,6 @@
-import {
-  type JSX,
-  createContext,
-  useContext,
-  createMemo,
-  Show,
-  mergeProps,
-} from 'solid-js';
+import { type JSX, Show, createContext, createMemo, mergeProps, useContext } from 'solid-js';
 import type { RouterTree } from '../core/create-router-tree';
-import {
-  matchRoute,
-  type RouterParams,
-} from '../core/router';
+import { type RouterParams, matchRoute } from '../core/router';
 import useLocation, { type UseLocation, type UseLocationOptions } from '../core/use-location';
 
 export interface RouterInstance<P extends RouterParams = RouterParams> extends UseLocation {
@@ -26,14 +16,10 @@ export interface RouterProps {
   location?: UseLocationOptions;
 }
 
-export default function Router(
-  props: RouterProps,
-): JSX.Element {
+export default function Router(props: RouterProps): JSX.Element {
   const location = useLocation(() => props.routes, props.location);
 
-  const matchedRoute = createMemo(() => (
-    matchRoute(props.routes, location.pathname)
-  ));
+  const matchedRoute = createMemo(() => matchRoute(props.routes, location.pathname));
 
   return (
     <LocationContext.Provider value={location}>
