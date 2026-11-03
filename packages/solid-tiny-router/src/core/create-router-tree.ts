@@ -1,10 +1,10 @@
 import {
-  JSX,
+  type JSX,
 } from 'solid-js';
 import {
   addRoute,
   createRouterNode,
-  RouterNode,
+  type RouterNode,
 } from './router';
 
 export interface Page {

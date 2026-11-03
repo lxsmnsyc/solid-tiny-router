@@ -1,17 +1,17 @@
 import {
-  JSX,
+  type JSX,
   createContext,
   useContext,
   createMemo,
   Show,
   mergeProps,
 } from 'solid-js';
-import { RouterTree } from '../core/create-router-tree';
+import type { RouterTree } from '../core/create-router-tree';
 import {
   matchRoute,
-  RouterParams,
+  type RouterParams,
 } from '../core/router';
-import useLocation, { UseLocation, UseLocationOptions } from '../core/use-location';
+import useLocation, { type UseLocation, type UseLocationOptions } from '../core/use-location';
 
 export interface RouterInstance<P extends RouterParams = RouterParams> extends UseLocation {
   params: P;

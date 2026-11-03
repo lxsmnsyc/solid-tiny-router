@@ -1,7 +1,7 @@
 import {
   createEffect,
   createSignal,
-  JSX,
+  type JSX,
   onCleanup,
   Show,
 } from 'solid-js';

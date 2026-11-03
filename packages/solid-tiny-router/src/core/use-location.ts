@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onCleanup } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { isLocalURL, normalizeURL } from '../utils/routing';
-import { RouterTree } from './create-router-tree';
+import type { RouterTree } from './create-router-tree';
 import { matchRoute } from './router';
 
 // https://github.com/GoogleChromeLabs/quicklink/blob/master/src/prefetch.mjs
